@@ -7,6 +7,8 @@
 # and MaxCountryMan at https://github.com/maxcountryman/flask-login/
 # and Flask Offical Tutorial at  http://flask.pocoo.org/docs/0.10/patterns/fileuploads/
 # see links for further understanding
+# Sarthak Jagetia aka DarkSeeker
+# Aastha Jagetia aka PastaEater (love you :P)!
 ###################################################
 
 import flask
@@ -20,11 +22,11 @@ import os, base64
 
 mysql = MySQL()
 app = Flask(__name__)
-app.secret_key = 'super secret string'  # Change this!
+app.secret_key = 'super secret string'  # Change this! #Fuck you! you change that!!:P
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'sarthak'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'sarthak' ##CHANGE YOUR PASSWORD WOMAN! (there are few more subtle hints everywhere like this...)
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -55,7 +57,7 @@ def user_loader(email):
     if not (email) or email not in str(users):
         return
     user = User()
-    user.id = email
+    user.id = email #you login through email
     return user
 
 
@@ -108,7 +110,7 @@ def login():
             return flask.redirect(flask.url_for('protected'))  # protected is a function defined in this file
 
     # information did not match
-    return "<a href='/login'>Try again</a>\
+    return "<a href='/login'> Information provided did not match - Try again! </a>\
 			</br><a href='/register'>or make an account</a>"
 
 
@@ -129,11 +131,27 @@ def register():
     return render_template('register.html', supress='True')
 
 
-@app.route("/register", methods=['POST'])
+@app.route("/register", methods=['GET', 'POST'])
 def register_user():
+    # These are not requirements but if specified by user need to be added to the database.
+    hometown = request.form.get('hometown')
+    gender = request.form.get('gender')
+
+    if request.form.get('first-name') == "" or request.form.get('last-name') == "":
+        return flask.redirect(flask.url_for('register'))
+
     try:
         email = request.form.get('email')
         password = request.form.get('password')
+
+
+
+        first_name = request.form.get('first-name')
+        #print("first name: {0}" .format(first_name))
+
+        last_name = request.form.get('last-name')
+        dob = request.form.get('dob')
+
     except:
         print(
             "couldn't find all tokens")  # this prints to shell, end users will not see this (all print statements go to shell)
@@ -141,7 +159,9 @@ def register_user():
     cursor = conn.cursor()
     test = isEmailUnique(email)
     if test:
-        print(cursor.execute("INSERT INTO Users (email, password) VALUES ('{0}', '{1}')".format(email, password)))
+        query = "INSERT INTO Users(email, password, fname, lname, dob, hometown, gender) VALUES ('{0}', '{1}', '{2}','{3}', '{4}', '{5}', '{6}')".format(email, password, first_name, last_name, dob, hometown, gender)
+        #print(cursor.execute("INSERT INTO Users (email, password) VALUES ('{0}', '{1}')".format(email, password)))
+        print(cursor.execute(query))
         conn.commit()
         # log user in
         user = User()
@@ -150,29 +170,23 @@ def register_user():
         return render_template('hello.html', name=email, message='Account Created!')
     else:
         print("couldn't find all tokens")
-        #email_exists(email)
+        #return render_template('email_exists.html')
         return flask.redirect(flask.url_for('email_exists'))
-        #return flask.redirect(flask.url_for('register'))
 
 @app.route("/email_exists")
 def email_exists():
     return render_template('email_exists.html')
 
-def isEmailUnique(email):
-    # use this to check if a email has already been registered
-    cursor = conn.cursor()
-    if cursor.execute("SELECT email  FROM Users WHERE email = '{0}'".format(email)):
-    #if cursor.execute("SELECT email  FROM Users WHERE email = email"):
-        # this means there are greater than zero entries with that email
-        return False
-    else:
-        return True
 
 def getUsersPhotos(uid):
     cursor = conn.cursor()
     cursor.execute("SELECT imgdata, picture_id, caption FROM Pictures WHERE user_id = '{0}'".format(uid))
     return cursor.fetchall()  # NOTE list of tuples, [(imgdata, pid), ...]
 
+def getUsersAlbums(uid):
+    cursor = conn.cursor()
+    cursor.execute("SELECT Name FROM Albums WHERE user_id = '{0}'".format(uid))
+    return cursor.fetchall()  # NOTE list of tuples, [(imgdata, pid), ...]
 
 def getUserIdFromEmail(email):
     cursor = conn.cursor()
@@ -180,7 +194,14 @@ def getUserIdFromEmail(email):
     return cursor.fetchone()[0]
 
 
-
+def isEmailUnique(email):
+    # use this to check if a email has already been registered
+    cursor = conn.cursor()
+    if cursor.execute("SELECT email  FROM Users WHERE email = '{0}'".format(email)):
+        # this means there are greater than zero entries with that email
+        return False
+    else:
+        return True
 
 
 # end login code
@@ -204,16 +225,19 @@ import datetime as dt
 @app.route('/add_album', methods=['GET','POST'])
 @flask_login.login_required
 def addAlbumName():
-    album_name = request.form.get('album')
-    #album_id = request.args.get('values')
-    date_of_creation = dt.datetime.now()
     uid = getUserIdFromEmail(flask_login.current_user.id)
-    print(album_name)
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO Albums (Name, date_of_creation, user_id) VALUES ('{0}', '{1}', '{2}' )".format(album_name, date_of_creation, uid))
-    conn.commit()
-    return render_template('add_album.html', album_name = album_name)
-
+    if request.method == 'POST':
+        #album_id = request.args.get('values')
+        date_of_creation = dt.datetime.now()
+        #uid = getUserIdFromEmail(flask_login.current_user.id)
+        album_name = request.form.get('album')
+        print(uid)
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO Albums (Name, date_of_creation, user_id) VALUES ('{0}', '{1}', '{2}' )".format(album_name, date_of_creation, uid))
+        conn.commit()
+        return render_template('hello.html', albums= getUsersAlbums(uid))
+    else:
+        return render_template('add_album.html', albums= getUsersAlbums(uid))
 
 @app.route('/upload', methods=['GET', 'POST'])
 @flask_login.login_required
@@ -224,11 +248,8 @@ def upload_file():
         caption = request.form.get('caption')
         print(caption)
         album_name = request.form.get('album')
-        #album_id = request.args.get('values')
-        #pictureid = random.randint(1,101);
-
         ab_name = str(album_name)
-        print(type(ab_name))
+        #print(type(ab_name))
 
         photo_data = base64.standard_b64encode(imgfile.read())
         cursor = conn.cursor()
@@ -236,10 +257,11 @@ def upload_file():
         album_id = cursor.fetchone()[0]
         cursor.execute("INSERT INTO Pictures (imgdata, user_id, caption, album_id) VALUES ('{0}', '{1}', '{2}','{3}' )".format(photo_data, uid, caption, album_id))
         conn.commit()
-        return render_template('hello.html', name=flask_login.current_user.id, message='Photo uploaded!', photos=getUsersPhotos(uid))
-    # The method is GET so we return a  HTML form to upload the a photo.
+        return render_template('hello.html', name=flask_login.current_user.id, message='Photo uploaded!', photos=getUsersPhotos(uid), albums= getUsersAlbums(uid))
+    # The method is GET so we return a HTML form to upload the a photo.
     else:
-        return render_template('upload.html')
+        uid = getUserIdFromEmail(flask_login.current_user.id)
+        return render_template('upload.html', photos=getUsersPhotos(uid), albums= getUsersAlbums(uid))
 
 
 # end photo uploading code
@@ -247,9 +269,13 @@ def upload_file():
 
 # default page
 @app.route("/", methods=['GET'])
+def homepage():
+    return render_template('homepg.html', message='Welcome to Photoshare !')
+
+@app.route("/hello", methods=['GET'])
 def hello():
-    return render_template('hello.html', message='Welecome to Photoshare')
-    #return render_template('email_exists.html')
+    return render_template('hello.html', message='Welcome to Photoshare !')
+
 
 if __name__ == "__main__":
     # this is invoked when in the shell  you run

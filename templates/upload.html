@@ -1,4 +1,3 @@
-<!-- author ben lawson (balawson@bu.edu) -->
 <head>
     <title>Upload a photo!</title>
 </head>
@@ -17,4 +16,25 @@
                 <input type="text" name="album" required='true' /><br/>
                 <input type="submit" value="Upload" />
             </form>
+
+        <!-- Displaying Albums for the users-->
+        {% if albums %}
+        <center><h2> Here are your Albums ! </h2></center>
+        <ul>
+            {% for album in albums %}
+                <center><li><a>{{album[0]}}</a></li></center>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <!-- Displaying Photos for the users-->
+        {% if photos %}
+            <center><h2>Here are your photos</h2></center>
+            <ul>
+                {% for photo in photos %}
+                    <li>{{photo[2]}}<br>
+                        <img src='data:image/png;base64, {{photo[0]}}'/></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </body>

@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Add Album</title>
+    <title>Add an album</title>
 </head>
 <body>
+    <form method="post" action="/add_album">
+        <label>Album name:</label>
+        <input type="text" name="album" required='true' /><br/>
+        <input type="submit" value="Submit" />
+         <li><a href='/'>Home</a></li>
+    </form>
 
-            <!--form method="post" enctype="multipart/form-data" action="/upload"-->
-
-
-                <label for="album">Enter Album name:</label>
-                <input type="text" name="album" required='true' /><br/>
-                <input type="submit" value="Submit" />
-
-            <li><a href='/'>Home</a></li>
+    <!-- Displaying Albums for the users-->
+    {% if albums %}
+        <h2> Here are your Albums ! </h2>
+        <ul>
+            {% for album in albums %}
+                <li><a>{{album[0]}}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 </body>
-</html>
