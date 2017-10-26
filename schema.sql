@@ -16,7 +16,7 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE Albums(
-	album_id INT NOT NULL AUTO_INCREMENT,
+	album_id INT AUTO_INCREMENT,
 	Name VARCHAR(40) NOT NULL,
 	date_of_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
 	user_id INT NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE Albums(
 
 -- CREATE Photo TABLE (include photo entity and 'contains' relationship)
 CREATE TABLE Pictures(
-	picture_id INT NOT NULL AUTO_INCREMENT,
+	picture_id INT AUTO_INCREMENT,
   user_id INT,
 	caption VARCHAR(200),
 	imgdata BLOB,
@@ -85,5 +85,8 @@ CREATE TABLE Has_tag(
 	FOREIGN KEY (tag_id) REFERENCES Tags (tag_id)  ON DELETE CASCADE,
 	FOREIGN KEY (picture_id) REFERENCES Pictures (picture_id) ON DELETE CASCADE
 );
+INSERT INTO Users(user_id, email, password, dob, fname, lname) VALUE (1, 'test@bu.edu', 'test', '29-01-04', 'TEST', 'test');
+INSERT INTO Albums (album_id, Name, user_id) VALUES (1, 'hardcoded', 1);
+INSERT INTO Pictures (picture_id, album_id) VALUES (1, 1);
 
 

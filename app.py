@@ -199,7 +199,21 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-import random
+import datetime as dt
+
+@app.route('/add_album', methods=['GET','POST'])
+@flask_login.login_required
+def addAlbumName():
+    album_name = request.form.get('album')
+    #album_id = request.args.get('values')
+    date_of_creation = dt.datetime.now()
+    uid = getUserIdFromEmail(flask_login.current_user.id)
+    print(album_name)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO Albums (Name, date_of_creation, user_id) VALUES ('{0}', '{1}', '{2}' )".format(album_name, date_of_creation, uid))
+    conn.commit()
+    return render_template('add_album.html', album_name = album_name)
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 @flask_login.login_required
@@ -208,12 +222,19 @@ def upload_file():
         uid = getUserIdFromEmail(flask_login.current_user.id)
         imgfile = request.files['photo']
         caption = request.form.get('caption')
-        album_name = request.form.get('album')
-        #pictureid = random.randint(1,101);
         print(caption)
+        album_name = request.form.get('album')
+        #album_id = request.args.get('values')
+        #pictureid = random.randint(1,101);
+
+        ab_name = str(album_name)
+        print(type(ab_name))
+
         photo_data = base64.standard_b64encode(imgfile.read())
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO Pictures (imgdata, user_id, caption) VALUES ('{0}', '{1}', '{2}' )".format(photo_data, uid, caption))
+        cursor.execute("Select album_id FROM Albums AS a WHERE a.Name = '" + ab_name+ "'")
+        album_id = cursor.fetchone()[0]
+        cursor.execute("INSERT INTO Pictures (imgdata, user_id, caption, album_id) VALUES ('{0}', '{1}', '{2}','{3}' )".format(photo_data, uid, caption, album_id))
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Photo uploaded!', photos=getUsersPhotos(uid))
     # The method is GET so we return a  HTML form to upload the a photo.
