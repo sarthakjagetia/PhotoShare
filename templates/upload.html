@@ -19,17 +19,17 @@
 
         <!-- Displaying Albums for the users-->
         {% if albums %}
-        <center><h2> Here are your Albums ! </h2></center>
+        <h2> Here are your Albums ! </h2>
         <ul>
             {% for album in albums %}
-                <center><li><a>{{album[0]}}</a></li></center>
+                <li><a>{{album[0]}}</a></li>
             {% endfor %}
         </ul>
         {% endif %}
 
         <!-- Displaying Photos for the users-->
         {% if photos %}
-            <center><h2>Here are your photos</h2></center>
+            <h2>Here are your photos</h2>
             <ul>
                 {% for photo in photos %}
                     <li>{{photo[2]}}<br>

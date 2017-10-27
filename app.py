@@ -265,6 +265,29 @@ def upload_file():
 
 
 # end photo uploading code
+#DELETING ALBUM AND PHOTOS
+
+@app.route("/delete_album", methods=['GET', 'POST'])
+@flask_login.login_required
+def delete_album():
+    '''
+    Shortcomings:
+    If there are no albums existing for a user in the database; this code still gives you a fake message of "Deleted!"
+    for any album_name you input!
+    '''
+    uid = getUserIdFromEmail(flask_login.current_user.id)
+    if request.method == 'POST':
+        album_name = request.form.get('album')
+        cursor = conn.cursor()
+        print(album_name)
+        print(type(album_name))
+        ab = str(album_name)
+        #cursor.execute("DELETE FROM Pictures AS p WHERE p.album_id = album_id")
+        cursor.execute("DELETE FROM Albums WHERE Name ='" + ab + "'")
+        conn.commit()
+        return render_template('hello.html', message='Deleted!')
+    else:
+        return render_template('delete_album.html', albums=getUsersAlbums(uid))
 
 
 # default page
