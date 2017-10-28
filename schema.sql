@@ -29,7 +29,7 @@ CREATE TABLE Pictures(
 	picture_id INT AUTO_INCREMENT,
   user_id INT,
 	caption VARCHAR(200),
-	imgdata BLOB,
+	imgdata LONGBLOB,
 	album_id INT NOT NULL,
 	PRIMARY KEY (picture_id),
   FOREIGN KEY (user_id) REFERENCES Users (user_id),
@@ -74,19 +74,22 @@ CREATE TABLE Likes(
 CREATE TABLE Tags (
   tag_id INT NOT NULL AUTO_INCREMENT,
   tag_word VARCHAR(30),
-  PRIMARY KEY (tag_id)
+	picture_id INT NOT NULL,
+  PRIMARY KEY (tag_id),
+	FOREIGN KEY (picture_id) REFERENCES Pictures (picture_id) ON DELETE CASCADE
 );
 
 -- CREATE Associate Table
-CREATE TABLE Has_tag(
-	picture_id INT NOT NULL,
-	tag_id INT NOT NULL,
-  PRIMARY KEY (tag_id),
-	FOREIGN KEY (tag_id) REFERENCES Tags (tag_id)  ON DELETE CASCADE,
-	FOREIGN KEY (picture_id) REFERENCES Pictures (picture_id) ON DELETE CASCADE
-);
+#CREATE TABLE Has_tag(
+#	picture_id INT NOT NULL,
+#	tag_id INT NOT NULL,
+#  PRIMARY KEY (tag_id),
+#	FOREIGN KEY (tag_id) REFERENCES Tags (tag_id)  ON DELETE CASCADE,
+#	FOREIGN KEY (picture_id) REFERENCES Pictures (picture_id) ON DELETE CASCADE
+#);
 INSERT INTO Users(user_id, email, password, dob, fname, lname) VALUE (1, 'test@bu.edu', 'test', '29-01-04', 'TEST', 'test');
 INSERT INTO Albums (album_id, Name, user_id) VALUES (1, 'hardcoded', 1);
 INSERT INTO Pictures (picture_id, album_id) VALUES (1, 1);
+#INSERT INTO Tags(tag_id, picture_id) VALUES (1, 1);
 
 

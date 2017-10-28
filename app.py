@@ -246,23 +246,38 @@ def upload_file():
     Shortcomings: If a user inputs a wrong album name; the code breaks instead of throwing him a message that
     "No such album exists"...
     Need to nicely handle that exception
-    :return:
+
+    Tags are taken input from the user as: #tag1 #tag2 #tag3
     '''
+    tags_list =[]
     if request.method == 'POST':
         uid = getUserIdFromEmail(flask_login.current_user.id)
         imgfile = request.files['photo']
         caption = request.form.get('caption')
-        print(caption)
+        tags = str(request.form.get('tags'))
+
+        tags_list = tags.split('#') #I get first element of the list as '' hence I will skip over that when adding it to database
+        tags_list = list(filter(None, tags_list))
+
         album_name = request.form.get('album')
         ab_name = str(album_name)
-        #print(type(ab_name))
 
         photo_data = base64.standard_b64encode(imgfile.read())
+
         cursor = conn.cursor()
         cursor.execute("Select album_id FROM Albums AS a WHERE a.Name = '" + ab_name+ "'")
         album_id = cursor.fetchone()[0]
         cursor.execute("INSERT INTO Pictures (imgdata, user_id, caption, album_id) VALUES ('{0}', '{1}', '{2}','{3}' )".format(photo_data, uid, caption, album_id))
         conn.commit()
+
+        ######TAGS PART HERE
+        cursor.execute("SELECT picture_id FROM Pictures WHERE user_id = '{0}' AND caption = '{1}' AND album_id = '{2}'" .format(uid, caption, album_id))
+        photo_id = cursor.fetchone()[0]
+        for i in tags_list:
+            cursor.execute("INSERT INTO Tags (tag_word, picture_id) VALUES ('{0}', '{1}')" .format(i, photo_id ))
+            conn.commit()
+        ######TAGS PART END HERE
+
         return render_template('hello.html', name=flask_login.current_user.id, message='Photo uploaded!', photos=getUsersPhotos(uid), albums= getUsersAlbums(uid))
     # The method is GET so we return a HTML form to upload the a photo.
     else:
