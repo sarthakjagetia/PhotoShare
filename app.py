@@ -432,9 +432,25 @@ def MyPhotoByTags():
 ##################### END ####################################
 
 ################# SEARCHING ALL PHOTOS BY EVERY USER WITH TAGS ###################
+@app.route('/search_allPhotos_by_tags',methods=['POST','GET'])
+def search_allPhotos_by_tags():
+    cursor = conn.cursor()
+    cursor.execute("SELECT DISTINCT t.tag_word FROM Tags t WHERE t.picture_id IN (SELECT p.picture_id FROM Pictures p WHERE p.picture_id = t.picture_id)")
+    tags = cursor.fetchall()
+    #print(type(tags))
+    #print("_____")
+    if(tags): #if tuple tags is not empty then render the page
+        return render_template('search_by_tags.html', All_Tags = tags)
+    else: #if empty then message the user to upload some photos first
+        return render_template('search_by_tags.html', message="No tagged photo uploaded by a user yet!")
 
-
-
+@app.route('/All_Photos_ByTags')
+def All_Photos_ByTags():
+    tag_word = request.args.get('tag_word_ToBePassed')
+    cursor = conn.cursor()
+    cursor.execute("SELECT p.picture_id, p.imgdata, p.caption FROM Pictures p WHERE p.picture_id IN(SELECT t.picture_id FROM Tags t WHERE t.tag_word = '{0}')".format(str(tag_word)))
+    return render_template('search_by_tags.html', All_photos = cursor.fetchall())
+##################### END ####################################
 
 
 
