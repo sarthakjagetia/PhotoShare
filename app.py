@@ -330,15 +330,25 @@ def delete_photos():
 @app.route('/showallmakefriend', methods=['GET', 'POST'])
 @flask_login.login_required
 def showallUsers():
+    '''
+        Shortcomings: Shows those users too who are already a friend of the logged in user.
+    '''
+    uid = getUserIdFromEmail(flask_login.current_user.id)
     if request.method == 'POST':
-        uid = getUserIdFromEmail(flask_login.current_user.id)
         cursor = conn.cursor()
+
+        cursor.execute("Select fname, lname FROM Users,Friendship WHERE Friendship.UID1 = '{0}' AND Friendship.UID2 = Users.user_id".format(uid))
+        afriend = cursor.fetchall()
+
         cursor.execute("Select user_id, fname, lname FROM Users WHERE user_id <> '{0}'".format(uid))
         friend_tuple = cursor.fetchall()
         print(friend_tuple)
-        return render_template("mke_friends.html", people=friend_tuple)
+        return render_template("mke_friends.html", people=friend_tuple, friends=afriend)
     else:
-        return render_template("mke_friends.html")
+        cursor = conn.cursor()
+        cursor.execute("Select fname, lname FROM Users,Friendship WHERE Friendship.UID1 = '{0}' AND Friendship.UID2 = Users.user_id".format(uid))
+        afriend = cursor.fetchall()
+        return render_template("mke_friends.html", friends=afriend)
 
 
 
@@ -348,7 +358,7 @@ def add_friend():
     '''
         Shortcomings: When user adds the same friend again it gives an Integrity error (error from database) since each
         must be able to add a friend only once.
-        '''
+    '''
     uid = getUserIdFromEmail(flask_login.current_user.id)
     uid2 = request.args.get('u_id')
     if request.method == 'POST':
