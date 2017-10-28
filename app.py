@@ -235,13 +235,19 @@ def addAlbumName():
         cursor = conn.cursor()
         cursor.execute("INSERT INTO Albums (Name, date_of_creation, user_id) VALUES ('{0}', '{1}', '{2}' )".format(album_name, date_of_creation, uid))
         conn.commit()
-        return render_template('hello.html', albums= getUsersAlbums(uid))
+        return render_template('hello.html', message='Added the album in your album list!')
     else:
         return render_template('add_album.html', albums= getUsersAlbums(uid))
 
 @app.route('/upload', methods=['GET', 'POST'])
 @flask_login.login_required
 def upload_file():
+    '''
+    Shortcomings: If a user inputs a wrong album name; the code breaks instead of throwing him a message that
+    "No such album exists"...
+    Need to nicely handle that exception
+    :return:
+    '''
     if request.method == 'POST':
         uid = getUserIdFromEmail(flask_login.current_user.id)
         imgfile = request.files['photo']
@@ -287,8 +293,19 @@ def delete_album():
         conn.commit()
         return render_template('hello.html', message='Deleted!')
     else:
-        return render_template('delete_album.html', albums=getUsersAlbums(uid))
+        return render_template('delete_album.html', albums=getUsersAlbums(uid))\
 
+@app.route('/delete', methods=['POST'])
+@flask_login.login_required
+def delete_photos():
+    uid = getUserIdFromEmail(flask_login.current_user.id)
+    photo_id = request.args.get('p_id')
+    print(photo_id)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM Pictures WHERE picture_id = '{0}'".format(photo_id))
+    conn.commit()
+    #return render_template('hello.html', message='Deleted!')
+    return render_template('upload.html', photos=getUsersPhotos(uid), albums= getUsersAlbums(uid))
 
 # default page
 @app.route("/", methods=['GET'])
