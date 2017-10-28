@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search my photos by tags</title>
+</head>
+<body>
+    {% if message %}
+    <h4>{{message}}!</h4>
+    {% endif %}
+    <!--form method="post" action="/add_album">
+        <label>Enter Tag from below:</label>
+        <input type="text" name="tags" required='true' /><br/>
+        <input type="submit" value="Submit" /><br>
+        <li><a href='/'>Home</a></li>
+    </form-->
+
+    <!-- Displaying Albums for the users-->
+    {% if Tags %}
+        <h2> Here are your Tags! </h2>
+        <ul>
+            {% for tag_word in Tags %}
+                <li><a href="{{url_for('MyPhotoByTags',tag_word_ToBePassed=tag_word[0])}}">{{tag_word[0]}}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if photos %}
+        <h2>Here are your photos!</h2>
+        <ul>
+            {% for photo in photos %}
+                <li>{{photo[2]}}<br>
+                    <img src='data:image/png;base64, {{photo[1]}}'/></li>
+                <form method="post" action="{{url_for('delete_photos', p_id = photo[1])}}">
+                    <input style="color:#FF0000;" type="submit" value="Delete Photo!" />
+                </form><br>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>

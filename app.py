@@ -244,8 +244,10 @@ def addAlbumName():
 def upload_file():
     '''
     Shortcomings: If a user inputs a wrong album name; the code breaks instead of throwing him a message that
-    "No such album exists"...
-    Need to nicely handle that exception
+    "No such album exists"...Need to nicely handle that exception
+
+    Tags Create table has been modified; Has_tags table has been deleted and the Foreign key (picture_id) has
+    been added now into Tags table
 
     Tags are taken input from the user as: #tag1 #tag2 #tag3
     '''
@@ -321,6 +323,36 @@ def delete_photos():
     conn.commit()
     #return render_template('hello.html', message='Deleted!')
     return render_template('upload.html', photos=getUsersPhotos(uid), albums= getUsersAlbums(uid))
+
+#####################SEARCHING A USER'S UPLOADED PHOTOS BY TAGS###########################
+@app.route('/search_by_tags',methods=['POST','GET'])
+@flask_login.login_required
+def search_by_tags():
+    '''
+    Shortcomings: If a user has not uploaded any photos, the page returns a blank page.
+    NOTE: DEALT WITH THE ABOVE SHORTCOMING BELOW
+    :return:
+    '''
+    uid = getUserIdFromEmail(flask_login.current_user.id)
+    cursor = conn.cursor()
+    cursor.execute("SELECT DISTINCT t.tag_word FROM Tags t WHERE t.picture_id IN (SELECT p.picture_id FROM Pictures p WHERE p.picture_id = t.picture_id AND p.user_id ='{0}')".format(uid))
+    tags = cursor.fetchall()
+    #print(type(tags))
+    #print("_____")
+    if(tags): #if tuple tags is not empty then render the page
+        return render_template('search_by_tags.html', Tags = tags)
+    else: #if empty then message the user to upload some photos first
+        return render_template('search_by_tags.html', message="Upload a photo with some tags first!")
+
+@app.route('/MyPhotoByTags')
+def MyPhotoByTags():
+    uid = getUserIdFromEmail(flask_login.current_user.id)
+    tag_word = request.args.get('tag_word_ToBePassed')
+    cursor = conn.cursor()
+    cursor.execute("SELECT p.picture_id, p.imgdata, p.caption FROM Pictures p WHERE p.picture_id IN(SELECT t.picture_id FROM Tags t WHERE t.tag_word = '{0}') AND p.user_id='{1}'".format(str(tag_word), uid))
+    return render_template('search_by_tags.html', photos = cursor.fetchall())
+##################### END ####################################
+
 
 # default page
 @app.route("/", methods=['GET'])
