@@ -324,6 +324,74 @@ def delete_photos():
     #return render_template('hello.html', message='Deleted!')
     return render_template('upload.html', photos=getUsersPhotos(uid), albums= getUsersAlbums(uid))
 
+
+#Friends functionality code
+
+@app.route('/showallmakefriend', methods=['GET', 'POST'])
+@flask_login.login_required
+def showallUsers():
+    if request.method == 'POST':
+        uid = getUserIdFromEmail(flask_login.current_user.id)
+        cursor = conn.cursor()
+        cursor.execute("Select user_id, fname, lname FROM Users WHERE user_id <> '{0}'".format(uid))
+        friend_tuple = cursor.fetchall()
+        print(friend_tuple)
+        return render_template("mke_friends.html", people=friend_tuple)
+    else:
+        return render_template("mke_friends.html")
+
+
+
+@app.route('/friends', methods=['GET', 'POST'])
+@flask_login.login_required
+def add_friend():
+    '''
+        Shortcomings: When user adds the same friend again it gives an Integrity error (error from database) since each
+        must be able to add a friend only once.
+        '''
+    uid = getUserIdFromEmail(flask_login.current_user.id)
+    uid2 = request.args.get('u_id')
+    if request.method == 'POST':
+        print(uid)
+        print(uid2)
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO Friendship (UID1, UID2) VALUES ('{0}', '{1}')".format(uid, uid2))
+        conn.commit()
+
+        cursor = conn.cursor()
+        cursor.execute("Select fname, lname FROM Users,Friendship WHERE Friendship.UID1 = '{0}' AND Friendship.UID2 = Users.user_id".format(uid))
+        afriend = cursor.fetchall()
+        return render_template("mke_friends.html", friends=afriend)
+
+@app.route('/search_friend', methods=['GET', 'POST'])
+@flask_login.login_required
+def search_a_friend():
+    uid = getUserIdFromEmail(flask_login.current_user.id)
+    if request.method == 'POST':
+        searched_friend = str(request.form.get('srchfrnd'))
+        print (searched_friend)
+        name_list = searched_friend.split(' ')
+        fname_friend = name_list[0]
+        lname_friend = name_list[1]
+        cursor = conn.cursor()
+        cursor.execute("Select user_id, fname, lname FROM Users WHERE fname ='{0}' AND lname = '{1}'".format(fname_friend, lname_friend))
+        searched_tuple = cursor.fetchall()
+
+        cursor.execute("Select fname, lname FROM Users,Friendship WHERE Friendship.UID1 = '{0}' AND Friendship.UID2 = Users.user_id".format(uid))
+        afriend = cursor.fetchall()
+        #if (afriend):
+        return render_template("mke_friends.html", searched_person=searched_tuple, friends=afriend)
+        #else:
+        #    return render_template("mke_friends.html", searched_person=searched_tuple)
+    else:
+        cursor = conn.cursor()
+        cursor.execute("Select fname, lname FROM Users,Friendship WHERE Friendship.UID1 = '{0}' AND Friendship.UID2 = Users.user_id".format(uid))
+        afriend = cursor.fetchall()
+        return render_template("mke_friends.html", friends=afriend)
+
+#Friend code ends here
+
+
 #####################SEARCHING A USER'S UPLOADED PHOTOS BY TAGS###########################
 @app.route('/search_by_tags',methods=['POST','GET'])
 @flask_login.login_required
@@ -352,6 +420,17 @@ def MyPhotoByTags():
     cursor.execute("SELECT p.picture_id, p.imgdata, p.caption FROM Pictures p WHERE p.picture_id IN(SELECT t.picture_id FROM Tags t WHERE t.tag_word = '{0}') AND p.user_id='{1}'".format(str(tag_word), uid))
     return render_template('search_by_tags.html', photos = cursor.fetchall())
 ##################### END ####################################
+
+################# SEARCHING ALL PHOTOS BY EVERY USER WITH TAGS ###################
+
+
+
+
+
+
+
+
+
 
 
 # default page

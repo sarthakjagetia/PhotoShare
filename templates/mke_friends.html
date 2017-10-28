@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<head>
+    <title>Make a friend</title>
+</head>
+<body>
+    <div class="title">
+            <h1> How would you like to make a friend? </h1>
+    </div>
+
+    <form method="post" action="{{url_for('showallUsers')}}">
+        <input type="submit" value="Show All Users!" />
+    </form><br>
+
+
+    <form method="post" action="/search_friend">
+        <label>Search for a friend:</label>
+        <input type="text" name="srchfrnd"/>
+        <input type="submit" value="Submit" />
+    </form>
+
+    <!-- Displaying the searched person for the user-->
+        {% if searched_person %}
+        <h4> Your searched persons are! </h4>
+        <ul>
+            {% for searched in searched_person %}
+                <li><a>{{searched[1]}} {{searched[2]}}</a></li>
+                <form method="post" action="{{url_for('add_friend',u_id = searched[0])}}">
+                        <input style="color:#FF0000;" type="submit" value="Add as friend!" />
+                </form><br>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+    <!-- Displaying all the users for the user-->
+        {% if people %}
+        <h4> Here are all the users of PhotoShare! </h4>
+        <ul>
+            {% for peep in people %}
+                <li><a>{{peep[1]}} {{peep[2]}}</a></li>
+                <form method="post" action="{{url_for('add_friend',u_id = peep[0])}}">
+                        <input style="color:#FF0000;" type="submit" value="Add as friend!" />
+                </form><br>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+<!-- Displaying all the friends for the user-->
+        {% if friends %}
+        <h4> Here are all your friends! </h4>
+        <ul>
+            {% for friend in friends %}
+                <li><a>{{friend[0]}} {{friend[1]}}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+
+ <a href='/hello'>Home</a>
+</body>

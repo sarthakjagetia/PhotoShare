@@ -26,6 +26,8 @@
         </ul>
     {% endif %}
 
+    <br>
+    <a href='/hello'>Home</a>
     {% if photos %}
         <h2>Here are your photos!</h2>
         <ul>
@@ -36,6 +38,8 @@
                     <input style="color:#FF0000;" type="submit" value="Delete Photo!" />
                 </form><br>
             {% endfor %}
+            <a href='/search_by_tags'>Back</a><br><br>
+            <a href='/hello'>Home</a>
         </ul>
     {% endif %}
 </body>
