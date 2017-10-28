@@ -8,7 +8,7 @@
 # and Flask Offical Tutorial at  http://flask.pocoo.org/docs/0.10/patterns/fileuploads/
 # see links for further understanding
 # Sarthak Jagetia aka DarkSeeker
-# Aastha Jagetia aka PastaEater (love you :P)!
+# Aastha Anand aka PastaEater (love you :P)!
 ###################################################
 
 import flask
@@ -26,7 +26,7 @@ app.secret_key = 'super secret string'  # Change this! #Fuck you! you change tha
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'sarthak' ##CHANGE YOUR PASSWORD WOMAN! (there are few more subtle hints everywhere like this...)
+app.config['MYSQL_DATABASE_PASSWORD'] = 'sarthak' 
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
