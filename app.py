@@ -451,7 +451,7 @@ def AllPhotoByTags():
     cursor = conn.cursor()
     cursor.execute("SELECT p.picture_id, p.imgdata, p.caption FROM Pictures p WHERE p.picture_id IN(SELECT t.picture_id FROM Tags t WHERE t.tag_word = '{0}')".format (str(tag_word)))
     return render_template('search_by_tags.html', All_Photos=cursor.fetchall())
-
+#################### END #############################
 
 
 
