@@ -14,6 +14,9 @@
         <br>
         <a href='/upload'>Upload a photo now!</a>
     {% endif %}
+        {% if message1 %}
+        <center><h2>{{message1}}</h2></center>
+    {% endif %}
     <!--form method="post" action="/add_album">
         <label>Enter Tag from below:</label>
         <input type="text" name="tags" required='true' /><br/>
@@ -70,14 +73,41 @@
             {% for photo in All_photos %}
                 <li>{{photo[2]}}<br>
                     <img src='data:image/png;base64, {{photo[1]}}'/></li>
-                <!--form method="post" action="{{url_for('delete_photos', p_id = photo[1])}}">
-                    <input style="color:#FF0000;" type="submit" value="Delete Photo!" />
-                </form--><br>
+                <br>
                 <form method="post" action="{{url_for('like_photos', p_id = photo[1])}}">
                     <input type="submit" value="Like!" />
                 </form>
             {% endfor %}
             <a href='/search_allPhotos_by_tags'>Back</a><br><br>
+            <a href='/hello'>Home</a>
+        </ul>
+    {% endif %}
+
+<!-- Displaying popular Tags for ALL users-->
+    {% if Popular_Tags %}
+        <h3>Here are the top tags:</h3>
+        <ul>
+            {% for tag_word in Popular_Tags %}
+                <li><a href="{{url_for('Popular_Photos_ByTags',tag_word_ToBePassed=tag_word[0])}}">{{tag_word[0]}}</a></li>
+            {% endfor %}
+        </ul>
+        <a href='/hello'>Home</a>
+
+    {% endif %}
+
+    <br>
+     {% if Popular_photos %}
+        <h2>Here are the photos!</h2>
+        <ul>
+            {% for photo in Popular_photos %}
+                <li>{{photo[2]}}<br>
+                    <img src='data:image/png;base64, {{photo[1]}}'/></li>
+                <br>
+                <form method="post" action="{{url_for('like_photos', p_id = photo[1])}}">
+                    <input type="submit" value="Like!" />
+                </form>
+            {% endfor %}
+            <a href='/by_Popular_tags'>Back</a><br><br>
             <a href='/hello'>Home</a>
         </ul>
     {% endif %}

@@ -456,6 +456,23 @@ def All_Photos_ByTags():
     return render_template('search_by_tags.html', All_photos = cursor.fetchall())
 #END
 
+#SEARCHING PHOTOS BY POPULAR TAGS
+@app.route('/by_Popular_tags', methods=['GET'])
+def bypopulartags():
+	cursor = conn.cursor()
+	cursor.execute("SELECT tag_word, COUNT(tag_word) FROM Tags GROUP BY tag_word ORDER BY COUNT(tag_word) DESC LIMIT 5")
+	return render_template('search_by_tags.html', Popular_Tags=cursor.fetchall(), message1="Top 5 tags")
+
+@app.route('/Popular_Photos_ByTags')
+def Popular_Photos_ByTags():
+    tag_word = request.args.get('tag_word_ToBePassed')
+    cursor = conn.cursor()
+    cursor.execute("SELECT p.picture_id, p.imgdata, p.caption FROM Pictures p WHERE p.picture_id IN(SELECT t.picture_id FROM Tags t WHERE t.tag_word = '{0}')".format(str(tag_word)))
+    return render_template('search_by_tags.html', Popular_photos = cursor.fetchall())
+#END
+
+#Comments code
+
 #Likes starts here
 @app.route('/likings', methods=['POST'])
 @flask_login.login_required
@@ -473,7 +490,10 @@ def like_photos():
     no_of_likes = cursor.fetchall()
     print(no_of_likes)
     return render_template('hello.html', message="You liked a photo!")
-##working on comments
+
+
+
+
 
 
 
