@@ -406,7 +406,7 @@ def search_a_friend():
 #Friend code ends here
 
 
-#####################SEARCHING A USER'S UPLOADED PHOTOS BY TAGS###########################
+#SEARCHING A USER'S UPLOADED PHOTOS BY TAGS
 @app.route('/search_by_tags',methods=['POST','GET'])
 @flask_login.login_required
 def search_by_tags():
@@ -470,6 +470,52 @@ def Popular_Photos_ByTags():
     cursor.execute("SELECT p.picture_id, p.imgdata, p.caption FROM Pictures p WHERE p.picture_id IN(SELECT t.picture_id FROM Tags t WHERE t.tag_word = '{0}')".format(str(tag_word)))
     return render_template('search_by_tags.html', Popular_photos = cursor.fetchall())
 #END
+
+#SEARCH A PHOTO BY TAG
+@app.route('/search_photo_by_tag', methods=['GET', 'POST'])
+def search_photo_by_tag():
+    if request.method == 'POST':
+        space = ''
+        table_rename = []
+        search = request.form.get('search')
+        tag = [x.strip('#') for x in search.split(' ')]
+        if space in tag:
+            tag.remove('')
+        query_string = 'SELECT p.imgdata, p.picture_id, p.caption FROM Pictures p WHERE p.picture_id IN( SELECT t1.picture_id FROM '
+        count = 1
+        for i in range(len(tag)):
+            if (i < (len(tag) - 1)):
+                query_string += ('Tags t' + str(count) + ', ')
+                rename = 't' + str(count)
+                table_rename.append(rename)
+            else:
+                query_string += ('Tags t' + str(count) + ' ')
+                rename = 't' + str(count)
+                table_rename.append(rename)
+            count += 1
+        query_string += 'WHERE '
+        print(query_string)
+        print(table_rename)
+        # for j in range(len(tag)-2):
+        for k in range(len(tag) - 1):
+            query_string += table_rename[k] + '.picture_id =' + table_rename[k + 1] + '.picture_id AND '
+
+        for m in range(len(tag)):
+            if (m < (len(tag) - 1)):
+                query_string += table_rename[m] + '.tag_word = ' + '\"' + tag[m] + '\"' + ' AND '
+            else:
+                query_string += table_rename[m] + '.tag_word = ' + '\"' + tag[m] + '\"' + ')'
+
+        cursor = conn.cursor()
+        cursor.execute(query_string)
+        # cursor.fetchall()
+        return render_template('search_photo_by_tag.html', All_photos=cursor.fetchall())
+    # for k in range(len())
+    else:
+        return render_template('search_photo_by_tag.html')
+#END
+
+
 
 #Comments code
 

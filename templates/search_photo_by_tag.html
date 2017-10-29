@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    {% if message %}
+        <h4>{{message}}!</h4>
+    {% endif %}
+    <meta charset="UTF-8">
+    <title>Search photo by tag</title>
+</head>
+<body>
+
+<a href='/hello'>Home</a><br>
+<a href='/search_allPhotos_by_tags'>See all tags</a><br><br>
+<form method="post" action="{{ url_for('search_photo_by_tag') }}">
+    <label for="search">Please enter your search query:</label>
+    <input type="text" name="search" required='true' /><br />
+    <input type="submit" value="Search" />
+</form>
+     {% if All_photos %}
+        <h2>Here are the photos!</h2>
+        <ul>
+            {% for photo in All_photos %}
+                <li>{{photo[2]}}<br>
+                    <img src='data:image/png;base64, {{photo[0]}}'/></li>
+                <br>
+                <form method="post" action="{{url_for('like_photos', p_id = photo[1])}}">
+                    <input type="submit" value="Like!" />
+                </form>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+
+</body>
+</html>
