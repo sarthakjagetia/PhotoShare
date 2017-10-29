@@ -8,7 +8,7 @@
 # and Flask Offical Tutorial at  http://flask.pocoo.org/docs/0.10/patterns/fileuploads/
 # see links for further understanding
 # Sarthak Jagetia aka DarkSeeker
-# Aastha Anand aka PastaEater (love you :P)!
+# Aastha Anand aka PastaEater
 ###################################################
 
 import flask
@@ -22,7 +22,7 @@ import os, base64
 
 mysql = MySQL()
 app = Flask(__name__)
-app.secret_key = 'super secret string'  # Change this! #Fuck you! you change that!!:P
+app.secret_key = 'super secret string'  # Change this!
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
@@ -335,7 +335,7 @@ def delete_photos():
 @flask_login.login_required
 def showallUsers():
     '''
-        Shortcomings: Shows those users too who are already a friend of the logged in user.
+        NotImplemented: Shows those users too who are already a friend of the logged in user.
     '''
     uid = getUserIdFromEmail(flask_login.current_user.id)
     if request.method == 'POST':
@@ -433,9 +433,9 @@ def MyPhotoByTags():
     cursor = conn.cursor()
     cursor.execute("SELECT p.picture_id, p.imgdata, p.caption FROM Pictures p WHERE p.picture_id IN(SELECT t.picture_id FROM Tags t WHERE t.tag_word = '{0}') AND p.user_id='{1}'".format(str(tag_word), uid))
     return render_template('search_by_tags.html', photos = cursor.fetchall())
-##################### END ####################################
+#END
 
-################# SEARCHING ALL PHOTOS BY EVERY USER WITH TAGS ###################
+#SEARCHING ALL PHOTOS BY EVERY USER WITH TAGS
 @app.route('/search_allPhotos_by_tags',methods=['POST','GET'])
 def search_allPhotos_by_tags():
     cursor = conn.cursor()
@@ -454,8 +454,25 @@ def All_Photos_ByTags():
     cursor = conn.cursor()
     cursor.execute("SELECT p.picture_id, p.imgdata, p.caption FROM Pictures p WHERE p.picture_id IN(SELECT t.picture_id FROM Tags t WHERE t.tag_word = '{0}')".format(str(tag_word)))
     return render_template('search_by_tags.html', All_photos = cursor.fetchall())
-##################### END ####################################
+#END
 
+#Likes starts here
+@app.route('/likings', methods=['POST'])
+@flask_login.login_required
+def like_photos():
+    uid = getUserIdFromEmail(flask_login.current_user.id)
+    photo_id = request.args.get('p_id')
+    print(photo_id)
+    date_of_like = dt.datetime.now()
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO Likes(user_id, picture_id, date_of_like) VALUES ('{0}','{1}', '{2}')".format(uid, photo_id, date_of_like))
+    conn.commit()
+
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(picture_id) FROM Likes WHERE picture_id = '{0}' GROUP BY picture_id".format(photo_id))
+    no_of_likes = cursor.fetchall()
+    print(no_of_likes)
+    return render_template('hello.html', message="You liked a photo!")
 ##working on comments
 
 

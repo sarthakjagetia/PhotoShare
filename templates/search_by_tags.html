@@ -9,6 +9,10 @@
     {% if message %}
         <h4>{{message}}!</h4>
         <a href='/hello'>Home</a>
+        <br>
+        <a href='/add_album'>Add an album!</a>
+        <br>
+        <a href='/upload'>Upload a photo now!</a>
     {% endif %}
     <!--form method="post" action="/add_album">
         <label>Enter Tag from below:</label>
@@ -38,6 +42,9 @@
                 <form method="post" action="{{url_for('delete_photos', p_id = photo[1])}}">
                     <input style="color:#FF0000;" type="submit" value="Delete Photo!" />
                 </form><br>
+                <form method="post" action="{{url_for('like_photos', p_id = photo[1])}}">
+                    <input type="submit" value="Like!" />
+                </form>
             {% endfor %}
             <a href='/search_by_tags'>Back</a><br><br>
             <a href='/hello'>Home</a>
@@ -66,6 +73,9 @@
                 <!--form method="post" action="{{url_for('delete_photos', p_id = photo[1])}}">
                     <input style="color:#FF0000;" type="submit" value="Delete Photo!" />
                 </form--><br>
+                <form method="post" action="{{url_for('like_photos', p_id = photo[1])}}">
+                    <input type="submit" value="Like!" />
+                </form>
             {% endfor %}
             <a href='/search_allPhotos_by_tags'>Back</a><br><br>
             <a href='/hello'>Home</a>

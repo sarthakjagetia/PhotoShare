@@ -46,6 +46,9 @@
                     <form method="post" action="{{url_for('delete_photos', p_id = photo[1])}}">
                         <input style="color:#FF0000;" type="submit" value="Delete Photo!" />
                     </form><br>
+                    <form method="post" action="{{url_for('like_photos', p_id = photo[1])}}">
+                        <input type="submit" value="Like!" />
+                    </form>
                 {% endfor %}
             </ul>
         {% endif %}
