@@ -143,18 +143,13 @@ def register_user():
     try:
         email = request.form.get('email')
         password = request.form.get('password')
-
-
-
         first_name = request.form.get('first-name')
         #print("first name: {0}" .format(first_name))
-
         last_name = request.form.get('last-name')
         dob = request.form.get('dob')
 
     except:
-        print(
-            "couldn't find all tokens")  # this prints to shell, end users will not see this (all print statements go to shell)
+        print("couldn't find all tokens")  # this prints to shell, end users will not see this (all print statements go to shell)
         return flask.redirect(flask.url_for('register'))
     cursor = conn.cursor()
     test = isEmailUnique(email)
@@ -242,6 +237,7 @@ def addAlbumName():
 @app.route('/upload', methods=['GET', 'POST'])
 @flask_login.login_required
 def upload_file():
+    tracker = 0
     '''
     Shortcomings: If a user inputs a wrong album name; the code breaks instead of throwing him a message that
     "No such album exists"...Need to nicely handle that exception
@@ -264,23 +260,31 @@ def upload_file():
         album_name = request.form.get('album')
         ab_name = str(album_name)
 
-        photo_data = base64.standard_b64encode(imgfile.read())
+        photo_data = base64.standard_b64encode(imgfile.read()) #type string
 
         cursor = conn.cursor()
-        cursor.execute("Select album_id FROM Albums AS a WHERE a.Name = '" + ab_name+ "'")
-        album_id = cursor.fetchone()[0]
-        cursor.execute("INSERT INTO Pictures (imgdata, user_id, caption, album_id) VALUES ('{0}', '{1}', '{2}','{3}' )".format(photo_data, uid, caption, album_id))
-        conn.commit()
-
-        ######TAGS PART HERE
-        cursor.execute("SELECT picture_id FROM Pictures WHERE user_id = '{0}' AND caption = '{1}' AND album_id = '{2}'" .format(uid, caption, album_id))
-        photo_id = cursor.fetchone()[0]
-        for i in tags_list:
-            cursor.execute("INSERT INTO Tags (tag_word, picture_id) VALUES ('{0}', '{1}')" .format(i, photo_id ))
+        cursor.execute("SELECT imgdata FROM Pictures AS p WHERE p.user_id = {0}".format(uid)) #a user cannot upload same photo twice
+        imgdata_list = cursor.fetchall() #tuple
+        for i in imgdata_list:
+            for item in i:
+                if (photo_data == str(item)):
+                    print("Found a same photo")
+                    tracker += 1
+        if(tracker > 0):
+            return render_template('upload.html', message="YOU CANNOT UPLOAD THE SAME PHOTO TWICE!", photos=getUsersPhotos(uid), albums= getUsersAlbums(uid))
+        else:
+            cursor.execute("Select album_id FROM Albums AS a WHERE a.Name = '" + ab_name+ "'")
+            album_id = cursor.fetchone()[0]
+            cursor.execute("INSERT INTO Pictures (imgdata, user_id, caption, album_id) VALUES ('{0}', '{1}', '{2}','{3}' )".format(photo_data, uid, caption, album_id))
             conn.commit()
+            ######TAGS PART HERE
+            cursor.execute("SELECT picture_id FROM Pictures WHERE user_id = '{0}' AND caption = '{1}' AND album_id = '{2}'" .format(uid, caption, album_id))
+            photo_id = cursor.fetchone()[0]
+            for i in tags_list:
+                cursor.execute("INSERT INTO Tags (tag_word, picture_id) VALUES ('{0}', '{1}')" .format(i, photo_id ))
+                conn.commit()
         ######TAGS PART END HERE
-
-        return render_template('hello.html', name=flask_login.current_user.id, message='Photo uploaded!', photos=getUsersPhotos(uid), albums= getUsersAlbums(uid))
+            return render_template('hello.html', name=flask_login.current_user.id, message='Photo uploaded!', photos=getUsersPhotos(uid), albums= getUsersAlbums(uid))
     # The method is GET so we return a HTML form to upload the a photo.
     else:
         uid = getUserIdFromEmail(flask_login.current_user.id)
