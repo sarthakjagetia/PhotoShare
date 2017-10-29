@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>See all photos of all users</title>
+</head>
+<body>
+
+{% if albums %}
+<h2> Here are all the Albums ! </h2>
+    <h5><i>Click each link for photographs</i></h5>
+	<ul>
+
+    {% for album in albums %}
+        <li><a href="{{url_for('showallPhotos',values=album[0])}}">{{album[1]}}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+<center><h3>Welcome!</h3></center>
+
+{% endif %}
+
+
+{% if photos %}
+<h2>Here's your photos !</h2>
+    <ul>
+    {% for photo in photos %}
+    	<h3>{{photo[2]}}</h3>
+        <img  src='data:image/png;base64, {{photo[0]}}' />
+        <form method="post" action="{{url_for('like_photos', p_id = photo[1])}}">
+        	<input type="submit" value="Like" />
+        </form>
+
+
+    {% endfor %}
+    <br>
+        <br>
+    <a href='/see_all_photos'> Back</a>
+    </ul>
+{% endif %}
+
+<br>
+<br>
+<a href='/hello'>Home</a>
+</body>
+</html>

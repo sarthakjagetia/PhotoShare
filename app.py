@@ -328,6 +328,21 @@ def delete_photos():
     #return render_template('hello.html', message='Deleted!')
     return render_template('upload.html', photos=getUsersPhotos(uid), albums= getUsersAlbums(uid))
 
+@app.route('/see_all_photos')
+def see_all_photos():
+    cursor = conn.cursor()
+    cursor.execute("SELECT album_id, name from albums")
+    albaom = cursor.fetchall() #in her accent
+
+    return render_template('see_all_photos.html', albums = albaom)
+
+@app.route('/showallphotos')
+def showallPhotos():
+    album_id = request.args.get('values')
+    cursor = conn.cursor()
+    cursor.execute("SELECT imgdata, picture_id, caption FROM Pictures WHERE album_id = '{0}'".format(album_id))
+    allPhotos = cursor.fetchall()
+    return render_template('see_all_photos.html', photos = allPhotos, album_id = album_id)
 
 #Friends functionality code
 
