@@ -487,6 +487,7 @@ def search_by_tags():
         return render_template('search_by_tags.html', Tags = tags)
     else: #if empty then message the user to upload some photos first
         return render_template('search_by_tags.html', message="Upload a photo with some tags first!")
+#END
 
 @app.route('/MyPhotoByTags')
 def MyPhotoByTags():
@@ -625,7 +626,7 @@ def show_comments():
     cursor.execute("SELECT c.text, c.date from Comments c where c.picture_id='{0}' AND c.user_id = 1".format(photo_id))
     guest = cursor.fetchall()
     return render_template('show_comments.html', display=reg_user, anon=guest)
-
+#END
 
 #Likes starts here
 @app.route('/likings', methods=['POST'])
@@ -667,6 +668,7 @@ def show_users_likes():
     cursor.execute("SELECT count(*) from likes l where l.picture_id='{0}'".format(photo_id))
     total_likes = cursor.fetchall()
     return render_template('likes.html', message="Here are the users who liked the selected photo!", display=reg_user, anon =guest_user, total =total_likes)
+#END
 
 @app.route('/top_10_users')
 def top_10_users():
@@ -688,8 +690,50 @@ def top_10_users():
     user_activity = sorted(user_activity.items(), key=operator.itemgetter(1), reverse=True)
     user_activity = user_activity[0:11]
     return render_template('top_10_users.html', user_activity=user_activity)
+#END
 
 
+@app.route('/you_may_like')
+@flask_login.login_required
+def you_may_like():
+    final_display = ()
+    uid = getUserIdFromEmail(flask_login.current_user.id)
+    cursor = conn.cursor()
+    cursor.execute("SELECT t.tag_word from Tags t, Pictures p where t.picture_id = p.picture_id AND p.user_id = '{0}' group by t.tag_word order by count(t.tag_word) desc limit 5".format(uid))
+    top5_tags = cursor.fetchall()
+    print(top5_tags)
+
+    cursor = conn.cursor()
+    cursor.execute("SELECT picture_id from Pictures where user_id <> '{0}' ".format(uid))
+    all_pid = cursor.fetchall()
+    print(all_pid)
+
+    recommended_pid = {}
+    for i in all_pid:
+        for j in top5_tags:
+            cursor = conn.cursor()
+            cursor.execute("SELECT p.picture_id from Pictures p, Tags t where t.picture_id = p.picture_id and t.tag_word ='{0}' and t.picture_id = '{1}' ".format(j[0], i[0]))
+            match = cursor.fetchall()
+            if match:
+                if i[0] not in recommended_pid:
+                    recommended_pid[i[0]] = 1
+                else:
+                    recommended_pid[i[0]] += 1
+    # print(recommended_pid)
+    sorted_reco = sorted(recommended_pid.items(), key=operator.itemgetter(1), reverse=True)
+    # print(sorted_reco)
+    t_count = []
+    for k1, v1 in sorted_reco:
+        cursor = conn.cursor()
+        cursor.execute("SELECT count(*) from Tags where picture_id = {0}".format(k1))
+        t_count.append(cursor.fetchall()[0][0])
+    print(t_count)
+
+    for k, v in sorted_reco:
+        cursor = conn.cursor()
+        cursor.execute("SELECT p.imgdata, p.caption, p.picture_id from Pictures p where p.picture_id='{0}' ".format(k))
+        final_display += cursor.fetchall()
+    return render_template('you_may_also_like.html', photos=final_display)
 
 
 # default page
