@@ -707,7 +707,7 @@ def like_photos():
 def show_users_likes():
     photo_id = request.args.get('values')
     cursor = conn.cursor()
-    cursor.execute("SELECT u.fname,u.lname from Likes l, Users u where l.user_id = u.user_id and l.picture_id='{0}'".format(photo_id))
+    cursor.execute("SELECT u.fname,u.lname from Likes l, Users u where l.user_id = u.user_id and l.picture_id='{0}' and l.user_id<>1".format(photo_id))
     reg_user = cursor.fetchall()
     cursor = conn.cursor()
     cursor.execute("SELECT count(*) from Likes l where l.picture_id='{0}' AND l.user_id = 1".format(photo_id))
@@ -715,7 +715,11 @@ def show_users_likes():
     cursor = conn.cursor()
     cursor.execute("SELECT count(*) from likes l where l.picture_id='{0}'".format(photo_id))
     total_likes = cursor.fetchall()
-    return render_template('likes.html', message="Here are the users who liked the selected photo!", display=reg_user, anon =guest_user, total =total_likes)
+    print(guest_user)
+    if (guest_user[0][0] != 0):
+        return render_template('likes.html', message="Here are the users who liked the selected photo!", display=reg_user, anon =guest_user, total =total_likes)
+    else:
+        return render_template('likes.html', message="Here are the users who liked the selected photo!", display=reg_user, total =total_likes)
 #END
 
 @app.route('/top_10_users')
