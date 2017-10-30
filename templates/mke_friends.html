@@ -16,7 +16,30 @@
         <label>Search for a friend:</label>
         <input type="text" name="srchfrnd"/>
         <input type="submit" value="Submit" />
-    </form>
+    </form><br>
+    <br>
+
+    <form method="post" action="{{url_for('recommend_friends')}}">
+        <input type="submit" value="Recommend me some friends!" />
+    </form><br>
+
+<!-- Displaying all the friends suggestions for the user-->
+        {% if suggestions %}
+        <h4> Anyone look familiar? These are your friend suggestions!</h4>
+        <ul>
+            {% for fr in suggestions %}
+                <li><a>{{fr[1]}} {{fr[2]}}</a></li>
+                <form method="post" action="{{url_for('add_friend',u_id = fr[0])}}">
+                        <input style="color:#FF0000;" type="submit" value="Add as friend!" />
+                </form><br>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+<!-- Displaying all the friends suggestions for the user-->
+        {% if nofriends %}
+        <h4><i> Sorry! Your friends-friend is already your friend haha! You need to make more friends to get suggestions! Click Show all users to find some!</i></h4>
+        {% endif %}
 
     <!-- Displaying the searched person for the user-->
         {% if searched_person %}

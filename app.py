@@ -420,6 +420,51 @@ def search_a_friend():
         afriend = cursor.fetchall()
         return render_template("mke_friends.html", friends=afriend)
 
+# recommend friends to user
+@app.route('/recommendfriends', methods=['GET', 'POST'])
+@flask_login.login_required
+def recommend_friends():
+    '''If the users friend has no friend no suggestions are provided. User has to see all users add another friend to get suggestions'''
+
+    uid = getUserIdFromEmail(flask_login.current_user.id)
+    ff = []
+    fof = []
+    nf = []
+    if request.method == 'POST':
+        cursor = conn.cursor()
+        cursor.execute("Select UID2 FROM Friendship WHERE UID1 = '{0}'".format(uid))
+        my_friends = cursor.fetchall()
+        for i in my_friends:
+            ff.append(i[0])
+        print(ff)
+        if ff:
+            for i in ff:
+                cursor = conn.cursor()
+                cursor.execute("Select UID2 FROM Friendship WHERE UID1 = '{0}'".format(i))
+                friends_of_friends = cursor.fetchall()
+                for m in friends_of_friends:
+                    fof.append(m[0])
+            print (fof)
+            if fof:
+                for item in fof:
+                    cursor = conn.cursor()
+                    print(item)
+                    cursor.execute("Select user_id, fname,lname FROM Users WHERE user_id = '{0}' AND user_id <> '{1}'".format( item, uid))
+                    names_of_friends = cursor.fetchall()
+                    print (names_of_friends)
+                    for n in names_of_friends:
+                        nf.append(n)
+                    print (nf)
+                return render_template("mke_friends.html", suggestions=nf)
+            else:
+                return render_template("mke_friends.html", nofriends='true')
+        else:
+            cursor = conn.cursor()
+            cursor.execute("Select user_id, fname, lname FROM Users WHERE user_id <> '{0}'".format(uid))
+            names = cursor.fetchall()
+            return render_template("mke_friends.html", suggestions=names)
+    else:
+        return render_template("mke_friends.html")
 #Friend code ends here
 
 
