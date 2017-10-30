@@ -16,6 +16,7 @@ from flask import Flask, Response, request, render_template, redirect, url_for
 from flaskext.mysql import MySQL
 import flask.ext.login as flask_login
 from flask.ext.login import current_user
+import operator
 
 # for image uploading
 # from werkzeug import secure_filename
@@ -622,7 +623,26 @@ def show_users_likes():
     total_likes = cursor.fetchall()
     return render_template('likes.html', message="Here are the users who liked the selected photo!", display=reg_user, anon =guest_user, total =total_likes)
 
-
+@app.route('/top_10_users')
+def top_10_users():
+    cursor = conn.cursor()
+    cursor.execute("SELECT user_id, fname, lname, email from Users where user_id <> 1")
+    top10users = cursor.fetchall()
+    print(top10users)
+    user_activity = {}
+    for i in top10users:
+    	cursor = conn.cursor()
+    	cursor.execute("SELECT count(*) from Pictures where user_id = {0}".format(i[0]))
+    	photo_count = cursor.fetchall()[0]
+    	cursor = conn.cursor()
+    	cursor.execute("SELECT count(*) from Comments where user_id = {0}".format(i[0]))
+    	comment_count = cursor.fetchall()[0]
+    	print(comment_count[0],photo_count[0])
+    	rank_count = int(comment_count[0]) + int(photo_count[0])
+    	user_activity[str(i[1]+" "+i[2]+" "+i[3])] =rank_count
+    user_activity = sorted(user_activity.items(), key=operator.itemgetter(1), reverse=True)
+    user_activity = user_activity[0:11]
+    return render_template('top_10_users.html', user_activity=user_activity)
 
 
 
