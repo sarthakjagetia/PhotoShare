@@ -42,18 +42,19 @@
             {% for photo in photos %}
                 <li>{{photo[2]}}<br>
                     <img src='data:image/png;base64, {{photo[1]}}'/></li>
-                <form method="post" action="{{url_for('delete_photos', p_id = photo[1])}}">
+                <form method="post" action="{{url_for('delete_photos', p_id = photo[0])}}">
                     <input style="color:#FF0000;" type="submit" value="Delete Photo!" />
-                </form><br>
-                <form method="post" action="{{url_for('like_photos', p_id = photo[1])}}">
+                </form>
+                <form method="post" action="{{url_for('like_photos', p_id = photo[0])}}">
                     <input type="submit" value="Like!" />
                 </form>
-                <form method="post" action="{{url_for('add_comment', picture_id = photo[1])}}">
-        	        <label for="comment">Comment:</label>
-                    <input type="text" name="comment" />
-        	        <input type="submit" value="Post Comment" />
-                </form><br><br>
-            {% endfor %}
+                <form method="post" action="{{url_for('show_users_likes', values = photo[1])}}">
+        	        <input type="submit" value="Show People who liked and total likes" />
+                </form>
+                <form method="post" action="{{url_for('show_comments', picture_id = photo[0])}}">
+                    <input type="submit" value="Show Comments" />
+                </form><br>
+            {% endfor %}<br>
             <a href='/search_by_tags'>Back</a><br><br>
             <a href='/hello'>Home</a>
         </ul>
@@ -79,14 +80,20 @@
                 <li>{{photo[2]}}<br>
                     <img src='data:image/png;base64, {{photo[1]}}'/></li>
                 <br>
-                <form method="post" action="{{url_for('like_photos', p_id = photo[1])}}">
+                <form method="post" action="{{url_for('like_photos', p_id = photo[0])}}">
                     <input type="submit" value="Like!" />
                 </form>
-                <form method="post" action="{{url_for('add_comment', picture_id = photo[1])}}">
+                <form method="post" action="{{url_for('show_users_likes', values = photo[1])}}">
+        	        <input type="submit" value="Show People who liked and total likes" />
+                </form>
+                <form method="post" action="{{url_for('add_comment', picture_id = photo[0])}}">
                     <label for="comment">Comment:</label>
                     <input type="text" name="comment" />
         	        <input type="submit" value="Post Comment" />
-                </form><br><br>
+                </form>
+                <form method="post" action="{{url_for('show_comments', picture_id = photo[0])}}">
+        	<input type="submit" value="Show Comments" />
+        </form><br>
             {% endfor %}
             <a href='/search_allPhotos_by_tags'>Back</a><br><br>
             <a href='/hello'>Home</a>
@@ -113,14 +120,20 @@
                 <li>{{photo[2]}}<br>
                     <img src='data:image/png;base64, {{photo[1]}}'/></li>
                 <br>
-                <form method="post" action="{{url_for('like_photos', p_id = photo[1])}}">
+                <form method="post" action="{{url_for('like_photos', p_id = photo[0])}}">
                     <input type="submit" value="Like!" />
                 </form>
-                <form method="post" action="{{url_for('add_comment', picture_id = photo[1])}}">
+                <form method="post" action="{{url_for('show_users_likes', values = photo[1])}}">
+        	        <input type="submit" value="Show People who liked and total likes" />
+                </form>
+                <form method="post" action="{{url_for('add_comment', picture_id = photo[0])}}">
         	        <label for="comment">Comment:</label>
                     <input type="text" name="comment" />
         	        <input type="submit" value="Post Comment" />
-                 </form><br><br>
+                 </form><br>
+                <form method="post" action="{{url_for('show_comments', picture_id = photo[0])}}">
+        	<input type="submit" value="Show Comments" />
+        </form><br>
             {% endfor %}
             <a href='/by_Popular_tags'>Back</a><br><br>
             <a href='/hello'>Home</a>

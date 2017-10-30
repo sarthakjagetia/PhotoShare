@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% if message %}
+        <h4>{{message}}!</h4>
+    {% endif %}
+    <meta charset="UTF-8">
+    <title>Show Comments</title>
+</head>
+<body>
+<a href='/hello'>Home</a>
+<br>
+<br>
+{% if display %}
+<h3>Comments from Registered Users !</h3>
+    <ul>
+    {% for comment in display %}
+    	<center><h3>{{comment[2]}}  {{comment[3]}} : {{comment[0]}} on {{comment[1]}} </h3></center>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+{% if anon %}
+<h2>Comments from Guest users!</h2>
+    <ul>
+    {% for comment in anon %}
+    	<center><h3>Guest User : {{comment[0]}} on {{comment[1]}}   </h3></center>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+</body>
+</html>

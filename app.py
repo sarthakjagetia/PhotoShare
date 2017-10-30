@@ -463,6 +463,7 @@ def search_allPhotos_by_tags():
         return render_template('search_by_tags.html', All_Tags = tags)
     else: #if empty then message the user to upload some photos first
         return render_template('search_by_tags.html', message="No tagged photo uploaded by a user yet!")
+#END
 
 @app.route('/All_Photos_ByTags')
 def All_Photos_ByTags():
@@ -478,6 +479,7 @@ def bypopulartags():
 	cursor = conn.cursor()
 	cursor.execute("SELECT tag_word, COUNT(tag_word) FROM Tags GROUP BY tag_word ORDER BY COUNT(tag_word) DESC LIMIT 5")
 	return render_template('search_by_tags.html', Popular_Tags=cursor.fetchall(), message1="Top 5 tags")
+#END
 
 @app.route('/Popular_Photos_ByTags')
 def Popular_Photos_ByTags():
@@ -533,7 +535,6 @@ def search_photo_by_tag():
 
 
 #Comments code
-
 @app.route('/add_comment',methods=['POST'])
 def add_comment():
     try:
@@ -565,10 +566,23 @@ def add_comment():
     else:
         print("own photo")
         return render_template('hello.html', error_message="You cannot comment on your own photo!")
+#END
+
+
+@app.route('/show_comments', methods=['POST'])
+def show_comments():
+    photo_id = request.args.get('picture_id')
+    cursor = conn.cursor()
+    cursor.execute("SELECT c.text,c.date,u.fname,u.lname from Comments c, Users u where c.user_id = u.user_id and c.user_id <> 1 and c.picture_id='{0}'".format(photo_id))
+    reg_user = cursor.fetchall()
+    cursor = conn.cursor()
+    cursor.execute("SELECT c.text, c.date from Comments c where c.picture_id='{0}' AND c.user_id = 1".format(photo_id))
+    guest = cursor.fetchall()
+    return render_template('show_comments.html', display=reg_user, anon=guest)
+
 
 #Likes starts here
 @app.route('/likings', methods=['POST'])
-#@flask_login.login_required
 def like_photos():
     '''
     Guest user has a hardcoded user_id of 1 and can like a photo once
@@ -591,10 +605,22 @@ def like_photos():
     no_of_likes = cursor.fetchall()
     print(no_of_likes)
     return render_template('hello.html', message="You liked a photo!")
+#END
 
 
-
-
+@app.route('/show_users_likes', methods=['POST'])
+def show_users_likes():
+    photo_id = request.args.get('values')
+    cursor = conn.cursor()
+    cursor.execute("SELECT u.fname,u.lname from Likes l, Users u where l.user_id = u.user_id and l.picture_id='{0}'".format(photo_id))
+    reg_user = cursor.fetchall()
+    cursor = conn.cursor()
+    cursor.execute("SELECT count(*) from Likes l where l.picture_id='{0}' AND l.user_id = 1".format(photo_id))
+    guest_user = cursor.fetchall()
+    cursor = conn.cursor()
+    cursor.execute("SELECT count(*) from likes l where l.picture_id='{0}'".format(photo_id))
+    total_likes = cursor.fetchall()
+    return render_template('likes.html', message="Here are the users who liked the selected photo!", display=reg_user, anon =guest_user, total =total_likes)
 
 
 

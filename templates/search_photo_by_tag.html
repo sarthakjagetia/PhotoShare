@@ -27,12 +27,18 @@
                 <form method="post" action="{{url_for('like_photos', p_id = photo[1])}}">
                     <input type="submit" value="Like!" />
                 </form>
+                <form method="post" action="{{url_for('show_users_likes', values = photo[1])}}">
+        	        <input type="submit" value="Show People who liked and total likes" />
+                </form>
                 <form method="post" action="{{url_for('add_comment', picture_id = photo[1])}}">
         	        <label for="comment">Comment:</label>
                     <input type="text" name="comment" />
 
         	        <input type="submit" value="Post Comment" />
-                </form><br><br>
+                </form><br>
+                        <form method="post" action="{{url_for('show_comments', picture_id = photo[1])}}">
+        	<input type="submit" value="Show Comments" />
+        </form><br>
             {% endfor %}
         </ul>
     {% endif %}

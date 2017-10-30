@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Here are the users who liked the photos:</title>
+</head>
+<body>
+
+<h2> Total Likes for this photo are : {{total[0][0]}}</h2>
+
+{% if display %}
+<h3>Likes from registered users!</h3>
+    <ul>
+    {% for like in display %}
+    	<li><h4>{{like[0]}}  {{like[1]}} </h4></li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+
+</body>
+</html>
