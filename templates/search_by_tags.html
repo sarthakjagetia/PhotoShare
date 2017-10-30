@@ -48,6 +48,11 @@
                 <form method="post" action="{{url_for('like_photos', p_id = photo[1])}}">
                     <input type="submit" value="Like!" />
                 </form>
+                <form method="post" action="{{url_for('add_comment', picture_id = photo[1])}}">
+        	        <label for="comment">Comment:</label>
+                    <input type="text" name="comment" />
+        	        <input type="submit" value="Post Comment" />
+                </form><br><br>
             {% endfor %}
             <a href='/search_by_tags'>Back</a><br><br>
             <a href='/hello'>Home</a>
@@ -77,6 +82,11 @@
                 <form method="post" action="{{url_for('like_photos', p_id = photo[1])}}">
                     <input type="submit" value="Like!" />
                 </form>
+                <form method="post" action="{{url_for('add_comment', picture_id = photo[1])}}">
+                    <label for="comment">Comment:</label>
+                    <input type="text" name="comment" />
+        	        <input type="submit" value="Post Comment" />
+                </form><br><br>
             {% endfor %}
             <a href='/search_allPhotos_by_tags'>Back</a><br><br>
             <a href='/hello'>Home</a>
@@ -106,6 +116,11 @@
                 <form method="post" action="{{url_for('like_photos', p_id = photo[1])}}">
                     <input type="submit" value="Like!" />
                 </form>
+                <form method="post" action="{{url_for('add_comment', picture_id = photo[1])}}">
+        	        <label for="comment">Comment:</label>
+                    <input type="text" name="comment" />
+        	        <input type="submit" value="Post Comment" />
+                 </form><br><br>
             {% endfor %}
             <a href='/by_Popular_tags'>Back</a><br><br>
             <a href='/hello'>Home</a>

@@ -15,6 +15,7 @@ import flask
 from flask import Flask, Response, request, render_template, redirect, url_for
 from flaskext.mysql import MySQL
 import flask.ext.login as flask_login
+from flask.ext.login import current_user
 
 # for image uploading
 # from werkzeug import secure_filename
@@ -531,16 +532,55 @@ def search_photo_by_tag():
 #END
 
 
-
 #Comments code
+
+@app.route('/add_comment',methods=['POST'])
+def add_comment():
+    try:
+        uid = getUserIdFromEmail(flask_login.current_user.id)
+    except AttributeError:
+        uid = 1  # GUEST USER
+
+    picture_id = request.args.get('picture_id')
+    comment_text = request.form.get('comment')
+    print(picture_id)
+    #print(comment_text)
+    #print("____")
+    cursor = conn.cursor()
+    cursor.execute("SELECT p.picture_id FROM Pictures p WHERE p.user_id = '{0}'".format(uid))
+    current_user_picture_id = cursor.fetchall()
+    #print(current_user_picture_id)
+    pid = []
+    for i in current_user_picture_id: #converting from tuple to list
+        pid.append(i[0])
+        #print(i)
+    print(pid)
+
+    if int(picture_id) not in pid: #TO MAKE SURE USER DOESN'T COMMENT ON HIS OWN PICTURES
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO COMMENTS(text, date, user_id, picture_id) VALUES ('{0}','{1}','{2}','{3}')".format(comment_text, dt.datetime.now(), uid, picture_id))
+        conn.commit()
+        print('comment successful')
+        return render_template('hello.html', message="You just commented on a photo!")
+    else:
+        print("own photo")
+        return render_template('hello.html', error_message="You cannot comment on your own photo!")
 
 #Likes starts here
 @app.route('/likings', methods=['POST'])
-@flask_login.login_required
+#@flask_login.login_required
 def like_photos():
-    uid = getUserIdFromEmail(flask_login.current_user.id)
+    '''
+    Guest user has a hardcoded user_id of 1 and can like a photo once
+    :return:
+    '''
+    try:
+        uid = getUserIdFromEmail(flask_login.current_user.id)
+    except AttributeError:
+        uid = 1 #GUEST USER
+    #print(uid)
     photo_id = request.args.get('p_id')
-    print(photo_id)
+    #print(photo_id)
     date_of_like = dt.datetime.now()
     cursor = conn.cursor()
     cursor.execute("INSERT INTO Likes(user_id, picture_id, date_of_like) VALUES ('{0}','{1}', '{2}')".format(uid, photo_id, date_of_like))
@@ -568,6 +608,9 @@ def homepage():
 
 @app.route("/hello", methods=['GET'])
 def hello():
+    #uid = getUserIdFromEmail(flask_login.current_user.id)
+    #print(uid)
+    #print(type(uid))
     return render_template('hello.html', message='Welcome to Photoshare !')
 
 

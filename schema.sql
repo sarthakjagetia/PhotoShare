@@ -79,17 +79,10 @@ CREATE TABLE Tags (
 	FOREIGN KEY (picture_id) REFERENCES Pictures (picture_id) ON DELETE CASCADE
 );
 
--- CREATE Associate Table
-#CREATE TABLE Has_tag(
-#	picture_id INT NOT NULL,
-#	tag_id INT NOT NULL,
-#  PRIMARY KEY (tag_id),
-#	FOREIGN KEY (tag_id) REFERENCES Tags (tag_id)  ON DELETE CASCADE,
-#	FOREIGN KEY (picture_id) REFERENCES Pictures (picture_id) ON DELETE CASCADE
-#);
-INSERT INTO Users(user_id, email, password, dob, fname, lname) VALUE (1, 'test@bu.edu', 'test', '29-01-04', 'TEST', 'test');
-INSERT INTO Albums (album_id, Name, user_id) VALUES (1, 'hardcoded', 1);
-INSERT INTO Pictures (picture_id, album_id) VALUES (1, 1);
+
+INSERT INTO Users(user_id, email, password, dob, fname, lname) VALUE (1, 'guest@bu.edu', 'guest', '29-01-04', 'guest', 'user');
+#INSERT INTO Albums (album_id, Name, user_id) VALUES (1, 'hardcoded', 1);
+#INSERT INTO Pictures (picture_id, album_id) VALUES (1, 1);
 #INSERT INTO Tags(tag_id, picture_id) VALUES (1, 1);
 
 
