@@ -536,6 +536,54 @@ def Popular_Photos_ByTags():
     return render_template('search_by_tags.html', Popular_photos = cursor.fetchall())
 #END
 
+from collections import defaultdict
+
+#SEARCH COMMENTS
+@app.route('/search_comments', methods=['GET', 'POST'])
+@flask_login.login_required
+def search_comments():
+    '''
+
+    :return:
+    '''
+    users = defaultdict(int)
+    usernames = []
+    final_list =[]
+    dummy =[]
+    uid = getUserIdFromEmail(flask_login.current_user.id)
+    if request.method == 'POST':
+        search = request.form.get('search') #type = unicode
+        cursor = conn.cursor()
+        cursor.execute("SELECT text, user_id FROM Comments")# GROUP BY user_id")
+        result = cursor.fetchall() #tuple ((unicode,int),(unicode,int),())
+        #print(result)
+        for i in result:
+            if str(search) == str(i[0]):
+                users[i[1]] += 1
+        #users CONTAINS OF KEYS AS USER_ID AND THE VALUES AS THE COUNT TO DISPLAY
+        users1 = sorted(users.items(), key=lambda (k, v): v, reverse=True) #list of users [(user_id,count),(user_id_count),()....]
+        #print(users1)
+        for i in users1:
+            cursor.execute("SELECT fname, lname from USERS WHERE user_id = {0}".format(i[0]))
+            dummy.append(i[1]) #appending the count
+            usernames.append(cursor.fetchall())#cursor.fetchall()
+        for i in usernames:
+            #for j in i:
+            fname = i[0][0]
+            lname = i[0][1]
+            name  = str(fname) + ' ' + str(lname)
+            final_list.append(name)
+        final_list1 = zip(final_list, dummy)
+        print(final_list1)
+        if final_list1:
+            return render_template('search_comments.html', final_list=final_list1)
+        else:
+            return render_template('search_comments.html', message="No such comment found!")
+    else:
+        return render_template('search_comments.html')
+#END
+
+
 #SEARCH A PHOTO BY TAG
 @app.route('/search_photo_by_tag', methods=['GET', 'POST'])
 def search_photo_by_tag():
@@ -734,7 +782,7 @@ def you_may_like():
         cursor.execute("SELECT p.imgdata, p.caption, p.picture_id from Pictures p where p.picture_id='{0}' ".format(k))
         final_display += cursor.fetchall()
     return render_template('you_may_also_like.html', photos=final_display)
-
+#END
 
 # default page
 @app.route("/", methods=['GET'])

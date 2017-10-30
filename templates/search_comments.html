@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Search Comments</title>
+</head>
+<body>
+{% if message %}
+    <h3>{{message}}!</h3>
+{% endif %}
+
+<h2>Search Comments</h2>
+
+<form method="post" action="{{ url_for('search_comments') }}">
+    <label for="search">Enter a word or two to search:</label>
+    <input type="text" name="search" required='true' /><br />
+    <input type="submit" value="Search" />
+</form>
+<br>
+    <ul>
+    {% for user in final_list %}
+        <h4>{{user[0]}} has {{user[1]}} comments that match exactly with that! </h4>
+    {% endfor %}
+    </ul>
+<br>
+<br>
+<a href='/hello'>Home</a><br>
+</body>
+</html>
