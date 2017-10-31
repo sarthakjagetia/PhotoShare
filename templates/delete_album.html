@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+<div align="center">
+
 <head>
     <meta charset="UTF-8">
     <title>Delete Albums/Photos</title>
@@ -10,17 +12,22 @@
         <input type="text" name="album" required='true' /><br/>
         <input type="submit" value="Submit" />
         <h4 style="color:#FF0000;"><i>*Deleting an album will also delete it's photos</i></h4>
-         <li><a href='/'>Home</a></li>
+
     </form>
 
     <!-- Displaying Albums for the users-->
     {% if albums %}
         <h2> Here are your Albums ! </h2>
-        <ul>
+
             {% for album in albums %}
-                <li><a>{{album[0]}}</a></li>
+               <li><h3><a>{{album[0]}}</a></h3></li>
             {% endfor %}
-        </ul>
+
     {% endif %}
+<br>
+<br>
+    <a href='/profile'>Back</a><br>
+<a href='/hello'>Home</a>
 </body>
+</div>
 </html>

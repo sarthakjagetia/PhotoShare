@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<div align="center">
+
 <html lang="en">
 <head>
 
@@ -18,13 +20,15 @@
     <input type="submit" value="Search" />
 </form>
 <br>
-    <ul>
+
     {% for user in final_list %}
-        <h4>{{user[0]}} has {{user[1]}} comments that match exactly with that! </h4>
+        <h3>{{user[0]}} has {{user[1]}} comments that match exactly with that! </h3>
     {% endfor %}
-    </ul>
+
 <br>
 <br>
+<a href='/profile'>Back</a><br>
 <a href='/hello'>Home</a><br>
 </body>
 </html>
+</div>

@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<div align="center">
+
 <html lang="en">
 <head>
 
@@ -10,7 +12,7 @@
 </head>
 <body>
 
-<a href='/hello'>Home</a><br>
+
 <a href='/search_allPhotos_by_tags'>See all tags</a><br><br>
 <form method="post" action="{{ url_for('search_photo_by_tag') }}">
     <label for="search">Please enter your search query:</label>
@@ -19,7 +21,7 @@
 </form>
      {% if All_photos %}
         <h2>Here are the photos!</h2>
-        <ul>
+
             {% for photo in All_photos %}
                 <li>{{photo[2]}}<br>
                     <img src='data:image/png;base64, {{photo[0]}}'/></li>
@@ -40,9 +42,10 @@
         	<input type="submit" value="Show Comments" />
         </form><br>
             {% endfor %}
-        </ul>
+
     {% endif %}
-
-
+<br><br>
+<a href='/hello'>Home</a><br>
 </body>
 </html>
+</div>

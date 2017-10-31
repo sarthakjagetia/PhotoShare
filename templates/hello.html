@@ -1,7 +1,8 @@
-<!-- author ben lawson (balawson@bu.edu) -->
 <!doctype html>
+<div align="center">
+<link href="https://fonts.googleapis.com/css?family=Amaranth" rel="stylesheet">
 {% if message %}
-  <h4>{{message}}!</h4>
+  <h4 style="font-family: 'Amaranth', sans-serif; font-size: 30px">{{message}}!</h4>
 {% endif %}
 <title>Photoshare</title>
 {% if name %}
@@ -10,16 +11,7 @@
 {% if error_message %}
   <h3 style="color:#FF0000;"><i>{{error_message}}!</i></h3>
 {% endif %}
-<!--{% if photos %}
-<h2>Here's your photos</h2>
-    <ul>
-    {% for photo in photos %}
 
-        <li>{{photo[2]}}<br>
-        <img src='data:image/png;base64, {{photo[0]}}'/></li>
-    {% endfor %}
-    </ul>
-{% endif %}-->
 
 
 {% if message is none %}
@@ -27,21 +19,11 @@
 {% else %}
   <p> Go to <a href='/profile'>profile?</a></p>
 {% endif %}
-<li><a href = '/top_10_users'> See top 10 users</a></li>
-<li>See <a href='/see_all_photos'> all photos</a>!</li>
-<li>See <a href='/search_allPhotos_by_tags'>all photos</a> of every user by tags</li>
-<li>See <a href='/by_Popular_tags'>all photos</a> by POPULAR tags</li>
-<li><a href='/search_photo_by_tag'>Search</a> a photo by Tag</li>
-<ul>
-    <li><a href='/add_album'>Add an Album!</a></li>
-    <li><a href='/upload'>Upload/Delete a photo</a> </li>
-    <li ><a style="color:#FF0000;"href='/delete_album'>DELETE an Album</a></li>
-    <li><a href='/search_by_tags'>Search all my photos by tags</a></li>
-    <li><a href="/showallmakefriend">Make Friends!</a></li>
-    <li><a href="/search_comments">Search Comments</a></li>
-    <li><a href='/you_may_like'>You may also like!</a></li>
-    <br>
-    <br>
-    <li><a href='/logout'>Logout</a></li>
-    <li><a href='/'>Home</a></li>
-</ul>
+<h4><a href = '/top_10_users'> See top 10 users</a></h4>
+<h4>See <a href='/see_all_photos'> all photos</a>!</h4>
+<h4>See <a href='/search_allPhotos_by_tags'>all photos</a> of every user by tags</h4>
+<h4>See <a href='/by_Popular_tags'>all photos</a> by POPULAR tags</h4>
+<h4><a href='/search_photo_by_tag'>Search</a> a photo by Tag</h4><br><br>
+
+<h4><a href='/'>HomePage</a></h4>
+</div>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<div align="center">
 <head>
 	<title>Here are the users who liked the photos:</title>
 </head>
@@ -11,18 +12,14 @@
 <h3>Likes from registered users!</h3>
     <ul>
     {% for like in display %}
-    	<li><h4>{{like[0]}}  {{like[1]}} </h4></li>
+    	<h4>{{like[0]}}  {{like[1]}} </h4>
     {% endfor %}
     </ul>
 {% endif %}
 {% if anon %}
-<h3>Likes from Anonymous users!</h3>
-    <ul>
-    
-    	<li><h4>Guest user </h4></li>
-
-    </ul>
+<h3>This photo is liked by the Guest user.</h3>
 {% endif %}
 
 </body>
+</div>
 </html>
