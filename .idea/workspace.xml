@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="df90874d-f01e-40d5-b0e6-2aae0aaa262d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/see_all_photos.html" afterPath="$PROJECT_DIR$/templates/see_all_photos.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/show_comments.html" afterPath="$PROJECT_DIR$/templates/show_comments.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/top_10_users.html" afterPath="$PROJECT_DIR$/templates/top_10_users.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/upload.html" afterPath="$PROJECT_DIR$/templates/upload.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/you_may_also_like.html" afterPath="$PROJECT_DIR$/templates/you_may_also_like.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/homepg.html" afterPath="$PROJECT_DIR$/templates/homepg.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -150,12 +146,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="you_may_also_like.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="you_may_also_like.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/you_may_also_like.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="612">
               <caret line="34" column="4" lean-forward="false" selection-start-line="34" selection-start-column="4" selection-end-line="34" selection-end-column="4" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="homepg.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/templates/homepg.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="369">
+              <caret line="32" column="76" lean-forward="false" selection-start-line="32" selection-start-column="76" selection-end-line="32" selection-end-column="76" />
+              <folding>
+                <element signature="n#style#0;n#h1#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -258,7 +266,6 @@
         <option value="$PROJECT_DIR$/PhotoShare.py" />
         <option value="$PROJECT_DIR$/templates/delete_stuff.html" />
         <option value="$PROJECT_DIR$/schema.sql" />
-        <option value="$PROJECT_DIR$/templates/homepg.html" />
         <option value="$PROJECT_DIR$/app.py" />
         <option value="$PROJECT_DIR$/templates/unauth.html" />
         <option value="$PROJECT_DIR$/templates/likes.html" />
@@ -278,6 +285,7 @@
         <option value="$PROJECT_DIR$/templates/top_10_users.html" />
         <option value="$PROJECT_DIR$/templates/upload.html" />
         <option value="$PROJECT_DIR$/templates/you_may_also_like.html" />
+        <option value="$PROJECT_DIR$/templates/homepg.html" />
       </list>
     </option>
   </component>
@@ -1109,14 +1117,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/homepg.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="32" column="70" lean-forward="false" selection-start-line="32" selection-start-column="70" selection-end-line="32" selection-end-column="70" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/delete_album.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="351">
@@ -1198,6 +1198,16 @@
         <state relative-caret-position="612">
           <caret line="34" column="4" lean-forward="false" selection-start-line="34" selection-start-column="4" selection-end-line="34" selection-end-column="4" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/homepg.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="369">
+          <caret line="32" column="76" lean-forward="false" selection-start-line="32" selection-start-column="76" selection-end-line="32" selection-end-column="76" />
+          <folding>
+            <element signature="n#style#0;n#h1#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
