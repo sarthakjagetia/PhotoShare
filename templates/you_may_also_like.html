@@ -1,14 +1,16 @@
 <!DOCTYPE html>
+<div align="center">
+
 <html>
 <head>
 	<title>You May Also Like</title>
 </head>
 <body>
-<center><a href='/'>Home</a></center>
+
 
 {% if photos %}
 <h2>Here are few suggestions</h2>
-    <ul>
+
     {% for photo in photos %}
     	<li><h3>{{photo[1]}}</h3></li>
     	<img  src='data:image/png;base64, {{photo[0]}}'/>
@@ -28,11 +30,12 @@
         	<input type="submit" value="Show Comments" />
         </form><br>
     {% endfor %}
-    </ul>
+
 {% endif %}
-
-
+<br>
+<a href='/profile'>Back</a>
 
 
 </body>
 </html>
+</div>
