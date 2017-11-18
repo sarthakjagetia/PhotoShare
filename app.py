@@ -7,8 +7,8 @@
 # and MaxCountryMan at https://github.com/maxcountryman/flask-login/
 # and Flask Offical Tutorial at  http://flask.pocoo.org/docs/0.10/patterns/fileuploads/
 # see links for further understanding
-# Sarthak Jagetia aka DarkSeeker
-# Aastha Anand aka PastaEater
+# Aastha Anand 
+# Sarthak Jagetia 
 ###################################################
 
 import flask

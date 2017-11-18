@@ -63,8 +63,8 @@ CREATE TABLE Likes(
 	user_id INT NOT NULL,
 	picture_id INT NOT NULL,
 	date_of_like DATETIME DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (picture_id),
-  UNIQUE (picture_id, user_id),
+  PRIMARY KEY (user_id, picture_id),
+  #UNIQUE (picture_id, user_id),
 	FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE,
 	FOREIGN KEY (picture_id) REFERENCES Pictures (picture_id) ON DELETE CASCADE
 );
